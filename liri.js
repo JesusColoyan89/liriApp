@@ -1,11 +1,21 @@
 var fs = require("fs");
 var keys = require("./keys.js");
 var twitter = require("twitter");
-var spotify = require("spotify");
+// var spotify = require("spotify");
 var omdb = require("omdb");
 var inquirer = require("inquirer");
-var twitterKeys = keys.twitterKeys;
-var spotifyKeys = keys.spotifyKeys;
+var request = require("request");
+var twitterKeys =  new twitter({
+	consumer_key: keys.twitterKeys.consumer_key,
+	consumer_secret: keys.twitterKeys.consumer_secret,
+	access_token_key: keys.twitterKeys.access_token_key,
+	access_token_secret: keys.twitterKeys.access_token_secret
+});
+var spotify = require("node-spotify-api");
+var spotifyKeys = new spotify({
+		id: keys.spotifyKeys.id,
+		secret: keys.spotifyKeys.secret
+});
 
 function tweet(){
 	var parameter = {screen_name: 'orangeBeanieMAn'};
@@ -48,7 +58,7 @@ function tweet(){
 
 				};
 					function movieSearch(){
-						inq.prompt([
+						inquirer.prompt([
 										{
 											type: "input",
 											message: "Look up a movie",
