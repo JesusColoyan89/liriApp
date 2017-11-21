@@ -2,68 +2,151 @@ var fs = require("fs");
 var keys = require("./keys.js");
 var twitter = require("twitter");
 var spotify = require("spotify");
+var omdb = require("omdb");
 var inquirer = require("inquirer");
-var twitterKeys = twitter ({
-  consumer_key: 'EcjawGt75KJ4lwZPl2Pw6XDYm',
-  consumer_secret: 'CBBGIdBXADM2LMMIhXy8EV00uqsGb1A8WKdfhVLZX1DZe1axAX',
-  access_token_key: '932337132290453505-rBZv3Th7VLyft2u86euBilxjTicuwbh',
-  access_token_secret: 'I8U5EEkSB4UZG7CHoQ0HCBe2Y8oPlAjVjKrUxHQzZlyJU',
-});
+var twitterKeys = keys.twitterKeys;
+var spotifyKeys = keys.spotifyKeys;
 
-inquirer.prompt([
-{
-	type: "list",
-	message: "Hello, please select a function",
-	choices: ["Tweet Check", "Spotify this song", "Look up this movie"],
-	name: "command"
-}
-]).then(function(response){
-	switch(response.command){
-		case "Tweet Check":
+function tweet(){
+	var parameter = {screen_name: 'orangeBeanieMAn'};
+				twitterKeys.get('statuses/user_timeline', parameter, function(error, tweets, response) {
+					for(i = 0; i<15; i++){
+						console.log("Tweet " + (i+1) + ": " + tweets[i].text);
+					}
+				});
+		};
+		
+		function spotify() {
+			inq.prompt([
+
+							{
+									type: "input",
+									message: "Spotify a song",
+									name: "searchInput"
+							}
+							]).then(function(response){
+								if(response.searchInput ===""){
+									response.searchInput ="Big Fish Theory";}
+								return console.log('Error occured: ' + err);	
+								};
+
+								for(var i=0; i<10; i++){
+									var songInfo = {
+										songName: data.tracks.items[i].name,
+										artist: data.tracks.items[i].album.artist[0].name,
+										album: data.tracks.items[i].album.name,
+										url: data.tracks.items[i].external_urls.spotify
+									};
+									console.log("Song Info: " + JSON.stringify(songInfo, null, 2));
+								};
+
+							})
+
+
+
+				};
+		};		
+
+
+function callFunction(arg){
+	if(arg ==="tweet"){
 		tweet();
-		break;
-	
-		case "Spotify this song":
+	}else if(arg === "spotify a song"){
 		spotify();
-		break;
 
-		case "Look up this movie":
-		omdb();
-		break;
+	// }else if(arg === "movie search"){
+
+	// }
+}
+};
+// inq.prompt([
+// 		{	
+// 			type: "list",
+// 			message: "Please choose one of my functions",
+// 			choices: ["Tweet Check", "Spotify Search", "Movie Search"],
+// 			name: "userCommand"
+
+// 		}
+// 		]).then(function(response){
+
+// 			switch(response.userCommand){
+// 				// =====================
+// 				// Check Tweets
+// 				// =====================
+
+
+// 			case "Tweet Check":
+// 			var parameter = {screen_name: "orangeBeanieMAn"};
+// 				twitterKeys.get('statuses/user_timeline', parameter, function(error, data, response) {
+// 				// 	for(i=0; i < 15; i++)
+// 				// 	{
+// 				// 		console.log("Tweets " + (i+1) +": " + data[i].text);
+// 				// 	}
+// 				// });
+// 		// tweet();
+
+// 		break;
+	
+// 				// ========================
+// 				// spotify
+// 				// ========================
+
+
+
+// 		case "Spotify this song":
+// 		inq.prompt([
+// 			{
+// 				type: "input",
+// 				message: "Spotify a song!",
+// 				name: "spotfiyInput"
+// 			}
+// 			]).then(function(response){
+// 				if(response.spotifyInput===""){}
+// 				spotifyKeys.search({type: "track"})
+// 			});
+		
+// 	}
+		
+		// spotify();
+		// break;
+
+		// case "Look up this movie":
+		// omdb();
+		// break;
 		
 
-};
+// };
 
-function tweet() {
-	var parameter = {screen_name: 'orangeBeanieMAn'};
-			twitterKeys.get('statuses/user_timeline', parameter,function(error, tweets, response) {
-				for (i=0; i <15; i++){
-					console.log("Tweets " + (i+1) + ": " + twitter[i].text);
-				}
-			})
-};
+// function tweet() {
+// 	var parameter = {screen_name: 'orangeBeanieMAn'};
+// 			twitterKeys.get('statuses/user_timeline', parameter,function(error, tweets, response) {
+// 				for (i=0; i <15; i++){
+// 					console.log("Tweets " + (i+1) + ": " + twitter[i].text);
+// 				}
+// 			})
+// };
 
-function spotify() {
-	spotify.search({ type: 'track', query: 'dancing in the moonlight' }, function(err, data) {
-    	if ( err ) {
-        console.log('Error occurred: ' + err);
-        return;
-    	}
-		console.log(data);
-})
-};
+// function spotify() {
+// 	spotify.search({ type: 'track', query: 'dancing in the moonlight' }, function(err, data) {
+//     	if ( err ) {
+//         console.log('Error occurred: ' + err);
+//         return;
+//     	}
+// 		console.log(data);
+// })
+// };
 
-function omdb() {
-	var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
-	request(queryUrl, function(error, response, body) {
+// function omdb() {
+// 	var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
+// 	request(queryUrl, function(error, response, body) {
 
-  if (!error && response.statusCode === 200) {
+//   if (!error && response.statusCode === 200) {
 
    
-    console.log("Info: " + JSON.parse(body).Plot);
-  }
-});
-}	
+//     console.log("Info: " + JSON.parse(body).Plot);
+//   }
+// });
+
 
 
 
