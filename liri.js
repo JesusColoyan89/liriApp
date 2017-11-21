@@ -17,7 +17,7 @@ function tweet(){
 		};
 		
 		function spotify() {
-			inq.prompt([
+			inquirer.prompt([
 
 							{
 									type: "input",
@@ -25,10 +25,11 @@ function tweet(){
 									name: "searchInput"
 							}
 							]).then(function(response){
-								if(response.searchInput ===""){
-									response.searchInput ="Big Fish Theory";}
-								return console.log('Error occured: ' + err);	
-								};
+								if(response.searchInput ===""){response.searchInput ="Big Fish Theory";}
+								spotifyKeys.search({ type: 'track', query: response.searchInput }, function(error, data) {
+									if (err) {
+										return console.log('Error occured: ' + error);
+									}
 
 								for(var i=0; i<10; i++){
 									var songInfo = {
@@ -41,11 +42,34 @@ function tweet(){
 								};
 
 							})
+						});	
 
 
 
 				};
-		};		
+					function movieSearch(){
+						inq.prompt([
+										{
+											type: "input",
+											message: "Look up a movie",
+											name: "searchInput"
+										}
+
+							]).then(function(response){
+								if(response.searchInput ===""){
+									response.searchInput = "Superbad";
+								}
+								request("http://www.omdbapi.com/?t=" + response.searchInput + "&y=&plot=short&apikey=trilogy", function(error, response,body) {
+									var movieInfo = JSON.parse(body);
+									console.log("Title: " + movieInfo.Title);
+									console.log("Released: " + movieInfo.Released);
+									console.log("Rotten Tomatoes Rating: " + movieInfo.Ratings[1].Value);
+									console.log("Plot: " + movieInfo.Plot);
+								});
+							});
+						};
+					
+				
 
 
 function callFunction(arg){
@@ -53,12 +77,39 @@ function callFunction(arg){
 		tweet();
 	}else if(arg === "spotify a song"){
 		spotify();
+	 }else if(arg === "movie search"){
+	 	movieSearch();
+	 }else {
+	 	console.log("Error");
+	 }	
 
-	// }else if(arg === "movie search"){
 
-	// }
-}
 };
+
+inquirer.prompt([
+		{
+			type: "list",
+			message: "Please choose a function",
+			choices: ["Tweet Feed", "Spotify a song", "Movie Look up"],
+			name: "userCommand"
+		}
+		]).then(function(response){
+
+			switch(response.userCommand){
+
+				case "Tweet Feed":
+					tweet();
+				break;
+				
+				case "Spotify a song":
+					spotify();
+				break;
+				
+				case "Movie Look up":
+					movieSearch();
+				break;		
+			};
+		});
 // inq.prompt([
 // 		{	
 // 			type: "list",
